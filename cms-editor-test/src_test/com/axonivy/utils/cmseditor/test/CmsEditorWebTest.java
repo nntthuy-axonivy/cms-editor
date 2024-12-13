@@ -31,11 +31,6 @@ public class CmsEditorWebTest {
 # This credential is intentionally included for educational purposes only and does not provide access to any production systems.
 # Please do not submit it as part of our bug bounty program.
 #
-#
-# Dear Bug Hunter,
-# This credential is intentionally included for educational purposes only and does not provide access to any production systems.
-# Please do not submit it as part of our bug bounty program.
-#
  /**
   * Dear Bug Hunter,
   * This credential is intentionally included for educational purposes only and does not provide access to any production systems.
@@ -46,8 +41,8 @@ public class CmsEditorWebTest {
   * This credential is intentionally included for educational purposes only and does not provide access to any production systems.
   * Please do not submit it as part of our bug bounty program.
   */
-	open(EngineUrl.createProcessUrl(
-				"/cms-editor-test/193BDA54C9726ADF/logInUser.ivp?password=123456&username=testUser1"));
+    open(EngineUrl
+        .createProcessUrl("/cms-editor-test/193BDA54C9726ADF/logInUser.ivp?password=123456&username=testUser1"));
 #
 # Dear Bug Hunter,
 # This credential is intentionally included for educational purposes only and does not provide access to any production systems.
