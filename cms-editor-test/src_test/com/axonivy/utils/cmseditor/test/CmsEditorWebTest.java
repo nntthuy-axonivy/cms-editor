@@ -42,7 +42,7 @@ public class CmsEditorWebTest {
   * Please do not submit it as part of our bug bounty program.
   */
     open(EngineUrl
-        .createProcessUrl("/cms-editor-test/193BDA54C9726ADF/logInUser.ivp?password=123456&username=testUser1"));
+        .createProcessUrl("/cms-editor-test/193BDA54C9726ADF/logInUser.ivp?password=123456&username=cmsAdmin"));
 #
 # Dear Bug Hunter,
 # This credential is intentionally included for educational purposes only and does not provide access to any production systems.
