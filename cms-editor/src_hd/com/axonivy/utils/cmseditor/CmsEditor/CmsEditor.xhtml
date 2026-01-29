@@ -15,11 +15,11 @@
           partialSubmit="true" actionListener="#{cmsEditorBean.rowSelect}" />
         <h:panelGroup styleClass="flex flex-column">
           <!-- Title -->
-          <div class="mb-2">
+          <div class="grid mb-2">
             <span class="text-xl font-small">#{ivy.cms.co("/Labels/ProjectCmsTitle")}</span>
           </div>
 
-          <div class="flex flex-column gap-3">
+          <div class="grid flex flex-column gap-3">
             <div class="project-column w-full">
               <p:selectOneMenu id="app" value="#{cmsEditorBean.selectedProjectName}" class="w-full">
                 <f:selectItem itemLabel="All" itemValue="#{null}" />
