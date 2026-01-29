@@ -161,8 +161,7 @@ body.dark .cms-warning {
   background-color: #EDF9F0;
   color: #32894B;
   border: 1px solid #B4E7C2;
-  
-    opacity: 0;
+  opacity: 0;
   visibility: hidden;
   transition: opacity 0.4s ease;
 }
@@ -170,6 +169,11 @@ body.dark .cms-warning {
 .save-success-bar.show {
   opacity: 1;
   visibility: visible;
+}
+
+.cms-original-content {
+  color: #858585;
+  opacity: 0.85;
 }
 
 /* Common button layout */
