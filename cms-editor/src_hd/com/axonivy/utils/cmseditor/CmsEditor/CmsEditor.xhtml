@@ -75,9 +75,20 @@
 
             <h:panelGroup layout="block" id="current-cms-column"
               styleClass="#{cmsEditorBean.editableCms ? 'col-4' : 'col-6'} flex flex-column columns">
-              <div class="column-header font-semibold text-lg cms-title">
-                <span>#{ivy.cms.co('/Labels/CMS')}</span> <i class="pi pi-info-circle cms-info-icon"
-                  title="CMS information" />
+              <div class="column-header flex align-items-center justify-content-between">
+                <div class="flex align-items-center gap-2">
+                  <span class="font-semibold text-lg cms-title"> #{ivy.cms.co('/Labels/CMS')} </span> <i
+                    class="pi pi-info-circle cms-info-icon" title="CMS information" />
+                </div>
+
+                <p:commandLink rendered="#{cmsEditorBean.isRenderUndoChange()}"
+                  actionListener="#{cmsEditorBean.undoChange}"
+                  update="column-container table-cms-keys cms-values cms-edit-value"
+                  styleClass="flex align-items-center gap-2 cursor-pointer undo-action">
+                  <i class="pi pi-undo text-blue-500"></i>
+                  <span class="text-blue-500 font-medium"> #{ivy.cms.co('/Labels/UndoChanges')} </span>
+                </p:commandLink>
+
               </div>
               <h:panelGroup styleClass="panel w-full flex flex-column flex-grow-1" layout="block">
                 <h:panelGroup styleClass="flex-grow-1 overflow-auto cms-scroll-wrapper" layout="block">
@@ -97,7 +108,13 @@
 
                 <h:panelGroup layout="block" styleClass="button-group">
 
-                  <h:panelGroup layout="block" styleClass="cms-warning" id="cms-warning-container">
+                  <h:panelGroup id="save-success-bar" layout="block"
+                    styleClass="save-success-bar flex align-items-center gap-2 p-3 border-round font-medium shadow-2">
+                    <i class="pi pi-check"></i>
+                    <span>Changes saved</span>
+                  </h:panelGroup>
+
+                  <h:panelGroup layout="block" styleClass="cms-warning mt-2" id="cms-warning-container">
                     <div class="cms-warning-title">
                       <i class="pi pi-exclamation-triangle cms-warning-icon" /> <span>
                         #{ivy.cms.co('/Labels/Warning')} </span>
@@ -166,7 +183,7 @@
                       process="@this table-cms-keys" actionListener="#{cmsEditorBean.writeCmsToApplication()}"
                       update="table-cms-keys cms-values cms-edit-value editable-column"
                       styleClass="flex-1  mt-3 ui-button-raised ui-button-primary cms-save-button"
-                      onclick="saveAllEditors()" oncomplete="initCmsWarnings();" partialSubmit="true"
+                      onclick="saveAllEditors()" oncomplete="initCmsWarnings(); showSaveSuccess();" partialSubmit="true"
                       onstart="destroyEditors()" />
                   </h:panelGroup>
 
@@ -214,18 +231,6 @@
           </div>
         </div>
       </p:dialog>
-
-      <p:dialog id="SaveSuccessDlg" widgetVar="SaveSuccessDlg" modal="true" closable="false" draggable="false"
-        resizable="false" showEffect="fade" hideEffect="fade" showHeader="false" styleClass="save-dialog">
-        <div class="text-center p-4">
-          <i class="pi pi-check icon-checked" />
-          <div class="text-lg font-semibold">
-            <h:outputText value="#{ivy.cms.co('/Labels/CMSSaved')}" escape="false" />
-          </div>
-        </div>
-      </p:dialog>
-
-
 
       <script type="text/javascript">
         window.isHideTaskName = false;

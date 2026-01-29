@@ -157,6 +157,21 @@ body.dark .cms-warning {
   background-color: #F3F3F3 !important;
 }
 
+.save-success-bar {
+  background-color: #EDF9F0;
+  color: #32894B;
+  border: 1px solid #B4E7C2;
+  
+    opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
+}
+
+.save-success-bar.show {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Common button layout */
 .cms-download-btn, .cms-edit-button, .cms-cancel-button,
   .cms-save-button {

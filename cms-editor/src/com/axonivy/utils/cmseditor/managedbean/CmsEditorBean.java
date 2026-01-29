@@ -60,7 +60,6 @@ public class CmsEditorBean implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
 
-  private static final String OPEN_SUCCESS_DIALOG_SCRIPT = "showDialog('SaveSuccessDlg');";
   private static final ObjectMapper mapper = new ObjectMapper();
   private final CmsService cmsService = CmsService.getInstance();
 
@@ -96,7 +95,6 @@ public class CmsEditorBean implements Serializable {
     selectedCms.getContents().forEach(s -> s.setEditing(false));
     onAppChange();
     PF.current().ajax().update(CONTENT_FORM);
-    PrimeFaces.current().executeScript(OPEN_SUCCESS_DIALOG_SCRIPT);
     lastSelectedCms = null;
   }
 
@@ -104,8 +102,20 @@ public class CmsEditorBean implements Serializable {
     return this.filteredCMSList.stream().anyMatch(Cms::isDifferentWithApplication);
   }
 
+  public boolean isRenderUndoChange() {
+    return Optional.ofNullable(this.selectedCms).map(Cms::isDifferentWithApplication).orElse(false);
+  }
+
   public void resetAllChanges() {
-    cmsService.removeSavedCmsFromApplication(this.filteredCMSList);
+    this.filteredCMSList.stream().filter(Cms::isDifferentWithApplication).map(Cms::getUri)
+        .forEach(uri -> this.cmsService.removeApplicationCmsByUri(uri));
+    onAppChange();
+    this.isEditableCms = false;
+    PF.current().ajax().update(CONTENT_FORM);
+  }
+
+  public void undoChange() {
+    this.cmsService.removeApplicationCmsByUri(this.selectedCms.getUri());
     onAppChange();
     this.isEditableCms = false;
     PF.current().ajax().update(CONTENT_FORM);

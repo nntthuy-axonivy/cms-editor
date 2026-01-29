@@ -1,6 +1,5 @@
 package com.axonivy.utils.cmseditor.service;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -62,11 +61,8 @@ public class CmsService {
     }));
   }
 
-  public void removeSavedCmsFromApplication(List<Cms> filteredCMSList) {
-    Sudo.run(() -> {
-      filteredCMSList.stream().filter(Cms::isDifferentWithApplication).map(Cms::getUri)
-          .forEach(uri -> createOrGetCmsByUri(uri).delete());
-    });
+  public void removeApplicationCmsByUri(String uri) {
+    Sudo.run(() -> createOrGetCmsByUri(uri).delete());
   }
 
 }
