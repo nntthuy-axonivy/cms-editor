@@ -107,8 +107,11 @@ public class CmsEditorBean implements Serializable {
   }
 
   public void resetAllChanges() {
-    this.filteredCMSList.stream().filter(Cms::isDifferentWithApplication).map(Cms::getUri)
-        .forEach(uri -> this.cmsService.removeApplicationCmsByUri(uri));
+    this.selectedCms = null;
+    this.filteredCMSList.stream().filter(Cms::isDifferentWithApplication).forEach(cms -> {
+      this.cmsService.removeApplicationCmsByUri(cms.getUri());
+      cms.getContents().forEach(content -> content.saveContent(content.getOriginalContent()));
+    });
     onAppChange();
     this.isEditableCms = false;
     PF.current().ajax().update(CONTENT_FORM);
@@ -116,8 +119,9 @@ public class CmsEditorBean implements Serializable {
 
   public void undoChange() {
     this.cmsService.removeApplicationCmsByUri(this.selectedCms.getUri());
-    onAppChange();
+    this.selectedCms.getContents().forEach(content -> content.saveContent(content.getOriginalContent()));
     this.isEditableCms = false;
+    onAppChange();
     PF.current().ajax().update(CONTENT_FORM);
   }
 
@@ -172,8 +176,7 @@ public class CmsEditorBean implements Serializable {
       isEditableCms = true;
       selectedCms = lastSelectedCms; // Revert to last valid selection
     } else {
-      PF.current().ajax().update(CONTENT_FORM_CMS_VALUES, CONTENT_FORM_SELECTED_URL, CONTENT_FORM_CMS_EDIT_VALUE,
-          CONTENT_FORM_EDITABLE_COLUMN, "content-form:current-cms-column", "content-form:column-container");
+      PF.current().ajax().update(CONTENT_FORM);
     }
   }
 
