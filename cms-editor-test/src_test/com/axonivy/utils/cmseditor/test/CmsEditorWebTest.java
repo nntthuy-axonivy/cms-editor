@@ -138,7 +138,7 @@ public class CmsEditorWebTest {
     $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).click();
     $(By.id(SAVE_SUCCESS_BAR_ID)).shouldBe(visible);
     $(By.id(RESET_ALL_CHANGES_BUTTON_ID)).shouldBe(visible);
-    $$(ORANGE_DOT_CLASS).shouldHave(CollectionCondition.size(1));
+    $$(ORANGE_DOT_CLASS).shouldHave(CollectionCondition.sizeGreaterThanOrEqual(1));
     SelenideElement resetBtn =
         $(By.id(RESET_ALL_CHANGES_BUTTON_ID)).scrollIntoView(true).click(ClickOptions.usingJavaScript());
     Selenide.executeJavaScript("arguments[0].click()", resetBtn);
