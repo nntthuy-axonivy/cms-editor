@@ -1,10 +1,10 @@
 package com.axonivy.utils.cmseditor.test;
 
-import static com.codeborne.selenide.CollectionCondition.allMatch;
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThanOrEqual;
 import static com.codeborne.selenide.Condition.enabled;
 import static com.codeborne.selenide.Condition.hidden;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.interactable;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
@@ -12,8 +12,8 @@ import static com.codeborne.selenide.Condition.matchText;
 
 import static com.axonivy.utils.cmseditor.constants.CmsConstants.EDIT_BUTTON_ID;
 import static com.axonivy.utils.cmseditor.constants.CmsConstants.SAVE_BUTTON_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.DOWNLOAD_BUTTON_ID;
 import static com.axonivy.utils.cmseditor.constants.CmsConstants.SEARCH_INPUT_ID;
+import static com.axonivy.utils.cmseditor.constants.CmsConstants.DOWNLOAD_BUTTON_ID;
 import static com.axonivy.utils.cmseditor.constants.CmsConstants.CMS_WARNING_CONTAINER_ID;
 import static com.axonivy.utils.cmseditor.constants.CmsConstants.CMS_WARNING_SAVE_CONTAINER_ID;
 
@@ -22,11 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
+import com.codeborne.selenide.ClickOptions;
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Selenide;
-import org.openqa.selenium.WebElement;
-import java.util.Objects;
+import com.codeborne.selenide.SelenideElement;
 
-@IvyWebTest
+@IvyWebTest(headless = false)
 public class CmsEditorWebTest {
 
   private String testCmsUri = "/TestContent";
@@ -34,7 +35,6 @@ public class CmsEditorWebTest {
 
   private static final String CMS_LINK_URI = "[id^='content-form:table-cms-keys:'][id$=':cms-uri']";
   private static final String CMS_VALUE_TAB_SELECTOR = "[id^='content-form:cms-values:'][id$=':cms-values-tab']";
-  private static final String CMS_EDIT_VALUE_DISPLAY_SELECTOR = "[id^='content-form:cms-edit-value:'][id$='_display']";
 
   /**
    * Dear Bug Hunter,
@@ -78,20 +78,11 @@ public class CmsEditorWebTest {
     var otherCms = cmsList.get(1);
     selectedCms.click();
     $$(CMS_VALUE_TAB_SELECTOR).shouldHave(sizeGreaterThanOrEqual(1));
-    // assert all content items is preview mode
-    var displayItems = $$(CMS_EDIT_VALUE_DISPLAY_SELECTOR);
-    displayItems.shouldBe(allMatch("All elements should be visible", WebElement::isDisplayed));
-    var displayItem = $$(CMS_EDIT_VALUE_DISPLAY_SELECTOR).first();
     $(By.id(EDIT_BUTTON_ID)).shouldBe(enabled).click();
-    displayItem.click();
 
-    var contentItem =
-        $(By.id(Objects.requireNonNull(displayItem.getAttribute("id")).replaceAll("_display", "_content")));
-    contentItem.$(By.className("sun-editor-editable"))
-        .setValue("Content is updated at 2 " + System.currentTimeMillis());
-    contentItem.$(".se-btn.se-resizing-enabled.se-tooltip").should(enabled);
+    $(By.className("sun-editor-editable")).setValue("Content is updated at 2 " + System.currentTimeMillis());
+    $(".se-btn.se-resizing-enabled.se-tooltip").should(enabled);
     Selenide.sleep(1000);
-
     otherCms.click();
 
     var errorDialog = $(By.id("primefacesmessagedlg"));
@@ -107,7 +98,7 @@ public class CmsEditorWebTest {
 
   @Test
   public void testHoverDownloadButtonToShowWarningMessage() {
-    $(By.id(DOWNLOAD_BUTTON_ID)).shouldBe(enabled).hover();
+    $(By.id(DOWNLOAD_BUTTON_ID)).shouldBe(enabled).scrollIntoView(true).hover();
     $(By.id(CMS_WARNING_CONTAINER_ID)).shouldBe(visible);
     $("body").hover();
     Selenide.sleep(1000);
@@ -117,13 +108,10 @@ public class CmsEditorWebTest {
   @Test
   public void testHoverEditButtonToShowWarningMessage() {
     var cmsList = $$(CMS_LINK_URI);
-    var displayItems = $$(CMS_EDIT_VALUE_DISPLAY_SELECTOR);
     var selectedCms = cmsList.get(0);
     selectedCms.click();
-    displayItems.shouldBe(allMatch("All elements should be visible", WebElement::isDisplayed));
     $(By.id(EDIT_BUTTON_ID)).shouldBe(enabled).click();
-    var displayItem = $$(CMS_EDIT_VALUE_DISPLAY_SELECTOR).first();
-    displayItem.click();
+
     $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).hover();
     $(By.id(CMS_WARNING_SAVE_CONTAINER_ID)).shouldBe(visible);
   }
@@ -135,15 +123,34 @@ public class CmsEditorWebTest {
     var otherCms = cmsList.get(1);
     selectedCms.click();
     $(By.id(EDIT_BUTTON_ID)).shouldBe(enabled).click();
-    var displayItem = $$(CMS_EDIT_VALUE_DISPLAY_SELECTOR).first();
-    displayItem.click();
-    var contentItem = $(By.id(displayItem.getAttribute("id").replaceAll("_display", "_content")));
-    contentItem.$(By.className("sun-editor-editable")).setValue("Content is updated at " + System.currentTimeMillis());
+    $(By.className("sun-editor-editable")).setValue("Content is updated at " + System.currentTimeMillis());
     Selenide.sleep(1000);
     $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).click();
-    $(By.id("SaveSuccessDlg")).shouldBe(visible);
+    $(By.id("content-form:save-success-bar")).shouldBe(visible);
+    $(By.id("content-form:undo-change-link")).shouldBe(visible);
     otherCms.click();
     $(By.id("primefacesmessagedlg")).should(hidden);
+  }
+
+  @Test
+  public void testResetAllChanges() {
+    var cmsList = $$(CMS_LINK_URI);
+    var selectedCms = cmsList.get(0);
+    selectedCms.click();
+    $(By.id(EDIT_BUTTON_ID)).shouldBe(enabled).click();
+    $(By.className("sun-editor-editable")).setValue("Content is updated at " + System.currentTimeMillis());
+    $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).click();
+    $(By.id("content-form:save-success-bar")).shouldBe(visible);
+    $(By.id("content-form:undo-change-link")).shouldBe(visible);
+    $$(".orange-dot").shouldHave(CollectionCondition.size(1));
+    SelenideElement resetBtn =
+        $(By.id("content-form:reset-all-change-button")).scrollIntoView(true).click(ClickOptions.usingJavaScript());
+    Selenide.executeJavaScript("arguments[0].click()", resetBtn);
+
+    $(By.id("content-form:resetConfirmInput")).setValue("reset");
+    $(By.id("content-form:resetBtn")).shouldBe(interactable).click();
+    $(By.id("content-form:reset-all-change-button")).shouldNotBe(visible);
+    $$(".orange-dot").shouldHave(CollectionCondition.size(0));
   }
 
   @Test
