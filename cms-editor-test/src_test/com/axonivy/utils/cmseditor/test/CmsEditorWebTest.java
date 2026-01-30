@@ -10,12 +10,8 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Condition.matchText;
 
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.EDIT_BUTTON_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.SAVE_BUTTON_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.SEARCH_INPUT_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.DOWNLOAD_BUTTON_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.CMS_WARNING_CONTAINER_ID;
-import static com.axonivy.utils.cmseditor.constants.CmsConstants.CMS_WARNING_SAVE_CONTAINER_ID;
+import static com.axonivy.utils.cmseditor.constants.CmsConstants.*;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +23,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
-@IvyWebTest(headless = false)
+@IvyWebTest
 public class CmsEditorWebTest {
 
   private String testCmsUri = "/TestContent";
@@ -126,8 +122,8 @@ public class CmsEditorWebTest {
     $(By.className("sun-editor-editable")).setValue("Content is updated at " + System.currentTimeMillis());
     Selenide.sleep(1000);
     $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).click();
-    $(By.id("content-form:save-success-bar")).shouldBe(visible);
-    $(By.id("content-form:undo-change-link")).shouldBe(visible);
+    $(By.id(SAVE_SUCCESS_BAR_ID)).shouldBe(visible);
+    $(By.id(UNDO_CHANGES_LINK_ID)).shouldBe(visible);
     otherCms.click();
     $(By.id("primefacesmessagedlg")).should(hidden);
   }
@@ -140,17 +136,17 @@ public class CmsEditorWebTest {
     $(By.id(EDIT_BUTTON_ID)).shouldBe(enabled).click();
     $(By.className("sun-editor-editable")).setValue("Content is updated at " + System.currentTimeMillis());
     $(By.id(SAVE_BUTTON_ID)).shouldBe(enabled).click();
-    $(By.id("content-form:save-success-bar")).shouldBe(visible);
-    $(By.id("content-form:undo-change-link")).shouldBe(visible);
-    $$(".orange-dot").shouldHave(CollectionCondition.size(1));
+    $(By.id(SAVE_SUCCESS_BAR_ID)).shouldBe(visible);
+    $(By.id(RESET_ALL_CHANGES_BUTTON_ID)).shouldBe(visible);
+    $$(ORANGE_DOT_CLASS).shouldHave(CollectionCondition.size(1));
     SelenideElement resetBtn =
-        $(By.id("content-form:reset-all-change-button")).scrollIntoView(true).click(ClickOptions.usingJavaScript());
+        $(By.id(RESET_ALL_CHANGES_BUTTON_ID)).scrollIntoView(true).click(ClickOptions.usingJavaScript());
     Selenide.executeJavaScript("arguments[0].click()", resetBtn);
 
-    $(By.id("content-form:resetConfirmInput")).setValue("reset");
-    $(By.id("content-form:resetBtn")).shouldBe(interactable).click();
-    $(By.id("content-form:reset-all-change-button")).shouldNotBe(visible);
-    $$(".orange-dot").shouldHave(CollectionCondition.size(0));
+    $(By.id(RESET_CONFIRM_INPUT_ID)).setValue("reset");
+    $(By.id(RESET_BTN_ID)).shouldBe(interactable).click();
+    $(By.id(RESET_ALL_CHANGES_BUTTON_ID)).shouldNotBe(visible);
+    $$(ORANGE_DOT_CLASS).shouldHave(CollectionCondition.size(0));
   }
 
   @Test

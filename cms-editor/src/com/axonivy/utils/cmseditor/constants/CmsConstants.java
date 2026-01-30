@@ -18,4 +18,11 @@ public class CmsConstants {
   public static final String CMS_WARNING_CONTAINER_ID = "content-form:cms-warning-container";
   public static final String CMS_WARNING_SAVE_CONTAINER_ID = "content-form:cms-warning-save-container";
   public static final String SEARCH_INPUT_ID = "content-form:search-input";
+  public static final String SAVE_SUCCESS_BAR_ID = "content-form:save-success-bar";
+  public static final String UNDO_CHANGES_LINK_ID = "content-form:undo-change-link";
+  public static final String RESET_ALL_CHANGES_BUTTON_ID = "content-form:reset-all-change-button";
+  public static final String RESET_CONFIRM_INPUT_ID = "content-form:resetConfirmInput";
+  public static final String RESET_BTN_ID = "content-form:resetBtn";
+  public static final String ORANGE_DOT_CLASS = ".orange-dot";
+
 }
