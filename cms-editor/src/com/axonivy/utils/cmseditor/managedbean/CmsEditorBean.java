@@ -109,6 +109,7 @@ public class CmsEditorBean implements Serializable {
   public void resetAllChanges() {
     this.selectedCms = null;
     this.filteredCMSList.stream().filter(Cms::isDifferentWithApplication).forEach(cms -> {
+      this.savedCmsMap.remove(cms.getUri());
       this.cmsService.removeApplicationCmsByUri(cms.getUri());
       cms.getContents().forEach(content -> content.saveContent(content.getOriginalContent()));
     });
@@ -118,10 +119,13 @@ public class CmsEditorBean implements Serializable {
   }
 
   public void undoChange() {
-    this.cmsService.removeApplicationCmsByUri(this.selectedCms.getUri());
-    this.selectedCms.getContents().forEach(content -> content.saveContent(content.getOriginalContent()));
-    this.isEditableCms = false;
+    this.savedCmsMap.remove(this.selectedCms.getUri());
+    this.filteredCMSList.stream().filter(cms -> cms.getUri().equals(this.selectedCms.getUri())).forEach(cms -> {
+      this.cmsService.removeApplicationCmsByUri(cms.getUri());
+      cms.getContents().forEach(content -> content.saveContent(content.getOriginalContent()));
+    });
     onAppChange();
+    this.isEditableCms = false;
     PF.current().ajax().update(CONTENT_FORM);
   }
 
