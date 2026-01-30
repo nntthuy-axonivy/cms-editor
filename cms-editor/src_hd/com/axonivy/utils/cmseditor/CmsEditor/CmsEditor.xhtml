@@ -28,7 +28,9 @@
               </p:selectOneMenu>
             </div>
             <div class="search-column w-full">
-              <span class="ui-input-icon-left w-full"> <i class="pi pi-search" /> <p:inputText id="search-input"
+              <span class="ui-input-icon-left w-full">
+                <i class="pi pi-search" />
+                <p:inputText id="search-input"
                   value="#{cmsEditorBean.searchKey}" placeholder="#{ivy.cms.co('/Labels/Search')}"
                   styleClass="w-full p-inputtext">
                   <p:ajax event="keyup" listener="#{cmsEditorBean.search}"
@@ -45,11 +47,12 @@
               <div class="column-header flex align-items-center justify-content-between">
                 <span class="link-label font-semibold text-lg"> #{ivy.cms.co('/Labels/Links')} </span>
 
-                <h:panelGroup id="reset-all-change-button" layout="block" rendered="#{cmsEditorBean.isRenderResetAllChange()}"
+                <h:panelGroup id="reset-all-change-button" layout="block"
+                  rendered="#{cmsEditorBean.isRenderResetAllChange()}"
                   class="flex align-items-center gap-2 cursor-pointer">
                   <f:passThroughAttribute name="onclick" value="PF('resetConfirmDlg').show();" />
                   <i class="pi pi-refresh text-red-500" />
-                  <span class="text-red-500 font-medium"> Reset all changes </span>
+                  <span class="text-red-500 font-medium"> #{ivy.cms.co("/Labels/ResetAllChanges")} </span>
                 </h:panelGroup>
               </div>
 
@@ -106,21 +109,19 @@
                 </h:panelGroup>
 
                 <h:panelGroup layout="block" styleClass="button-group">
-
                   <h:panelGroup id="save-success-bar" layout="block"
                     styleClass="save-success-bar flex align-items-center gap-2 p-3 border-round font-medium shadow-2">
                     <i class="pi pi-check"></i>
-                    <span>Changes saved</span>
+                    <span>#{ivy.cms.co("/Labels/ChangesSaved")}</span>
                   </h:panelGroup>
 
                   <h:panelGroup layout="block" styleClass="cms-warning mt-2" id="cms-warning-container">
                     <div class="cms-warning-title">
-                      <i class="pi pi-exclamation-triangle cms-warning-icon" /> <span>
-                        #{ivy.cms.co('/Labels/Warning')} </span>
+                      <i class="pi pi-exclamation-triangle cms-warning-icon" />
+                      <span> #{ivy.cms.co('/Labels/Warning')} </span>
                     </div>
                     <div class="cms-warning-content">
-                      <span> #{ivy.cms.co('/Labels/CMSWarningTextForDownload')}<h:commandLink
-                          value="#{ivy.cms.co('/Labels/UndoChanges')}" styleClass="cms-warning-link" /></span>
+                      <span> #{ivy.cms.co('/Labels/CMSWarningTextForDownload')}</span>
                     </div>
                   </h:panelGroup>
 
@@ -201,19 +202,20 @@
         <p:dialog id="resetConfirmDlg" widgetVar="resetConfirmDlg" modal="true" closable="true" draggable="false"
           resizable="false" showHeader="false" styleClass="reset-confirm-dialog" width="420">
           <div class="p-4">
-            <div class="text-lg font-semibold mb-2">Are you sure you want to reset all changes?</div>
+            <div class="text-lg font-semibold mb-2">#{ivy.cms.co("/Labels/ResetAllChangeConfirmation")}</div>
             <div class="mb-3">
-              <span class="text-sm text-color-secondary"> Enter <b>reset</b> to confirm
-              </span>
+              <h:outputText value="#{ivy.cms.co('/Labels/ResetAdvice')}" escape="false"
+                styleClass="text-sm text-color-secondary" />
               <p:inputText id="resetConfirmInput" value="#{cmsEditorBean.resetConfirmText}" styleClass="w-full mt-2">
                 <p:ajax event="keyup" update="resetBtn" />
               </p:inputText>
             </div>
             <div class="flex justify-content-end gap-2">
-              <p:commandButton value="Cancel" styleClass="ui-button-secondary ui-button-outlined"
+              <p:commandButton value="#{ivy.cms.co('/Labels/Cancel')}"
+                styleClass="ui-button-secondary ui-button-outlined"
                 onclick="PF('resetConfirmDlg').hide(); return false;" />
-              <p:commandButton id="resetBtn" value="Reset" icon="pi pi-refresh" styleClass="ui-button-danger"
-                actionListener="#{cmsEditorBean.resetAllChanges}"
+              <p:commandButton id="resetBtn" value="#{ivy.cms.co('/Labels/ResetAll')}" icon="pi pi-refresh"
+                styleClass="ui-button-danger" actionListener="#{cmsEditorBean.resetAllChanges}"
                 update="column-container table-cms-keys cms-values cms-edit-value"
                 disabled="#{cmsEditorBean.resetConfirmText ne 'reset'}" oncomplete="PF('resetConfirmDlg').hide();" />
             </div>
