@@ -95,7 +95,7 @@ To implement and use the CMS Editor in your Axon Ivy environment, follow these s
 
 **Option 2: Add as Maven Dependency**
 
-Add the following dependency to your project's `pom.xml`:
+Add the following dependency to your project's `pom.xml` (replace `${version}` with the latest version from the [Axon Ivy Marketplace](https://market.axonivy.com) or [releases page](https://github.com/axonivy-market/cms-editor/releases)):
 
 ```xml
 <dependency>
